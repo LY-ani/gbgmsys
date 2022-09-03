@@ -76,7 +76,18 @@ export default {
       token: "",
     };
   },
+  mounted() {
+    window.addEventListener("keyup", this.keyUp);
+  },
+  destroyed() {
+    window.removeEventListener("keyup", this.keyUp, false);
+  },
   methods: {
+    keyUp(e) {
+      if (e.keyCode === 13) {
+        this.login();
+      }
+    },
     regNew() {
       this.$router.push("/register");
     },
@@ -98,11 +109,10 @@ export default {
         await this.axios("/getMenu")
           .then((res) => {
             if (res.data.status === 0) {
-              this.$store.commit("removeMenu");
+              this.$store.commit("clearMenu");
               this.$store.commit("setMenu", res.data.menu);
               this.$store.commit("addMenu", this.$router);
               this.$router.push("/home");
-              console.log(this.$router);
             } else {
               this.$message.error(res.data.message);
             }

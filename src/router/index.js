@@ -27,12 +27,13 @@ const routes = [
     name: 'Main',
     component: Main,
     redirect: '/home',
-    // children: [
-    //   {
-    //     path: '/home',
-    //     component: () => import('../views/home/Home.vue'),
-    //   },
-    // ],
+    children: [
+      {
+        path: '/profile',
+        name: 'Profile',
+        component: () => import('../views/profile/Profile.vue'),
+      },
+    ],
   },
   {
     path: '/login',
@@ -44,11 +45,7 @@ const routes = [
     name: 'Register',
     component: () => import('../views/login/Register.vue'),
   },
-  {
-    path: '/profile',
-    name: 'Profile',
-    component: () => import('../views/profile/Profile.vue'),
-  },
+
   {
     path: '/404',
     name: 'NotFound',

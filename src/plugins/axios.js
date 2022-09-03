@@ -15,14 +15,11 @@ axios.interceptors.request.use(
     const token = store.state.userToken.token;
     // console.log('axios token', token);
     if (token) {
-      config.headers = {
-        Authorization: token,
-      };
+      config.headers.Authorization = token;
     }
     if (config.method === 'post' && !(config.data instanceof FormData)) {
-      config.headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      };
+      config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+
       // 后端要求传数组的时候做的设置
       // console.log(config.data);
       config.data = qs.stringify(config.data, {
@@ -30,10 +27,9 @@ axios.interceptors.request.use(
       });
       // console.log(config.data);
     } else if (config.method === 'post' && config.data instanceof FormData) {
-      config.headers = {
-        'Content-Type': 'multipart/form-data',
-      };
+      config.headers['Content-Type'] = 'multipart/form-data';
     }
+
     return config;
   },
   (err) => {

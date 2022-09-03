@@ -63,6 +63,19 @@
           ></el-input>
         </el-form-item>
         <el-form-item
+          label="手机号"
+          label-width="80px"
+          prop="phone"
+          class="phone"
+        >
+          <el-input
+            type="tel"
+            v-model="form.phone"
+            auto-complete="off"
+            placeholder="请输入手机号"
+          ></el-input>
+        </el-form-item>
+        <el-form-item
           label="头像"
           label-width="80px"
           prop="user_pic"
@@ -87,7 +100,6 @@
             <el-button size="small">选择文件</el-button>
           </el-upload> -->
         </el-form-item>
-        <el-form-item> </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="register">注册</el-button>
         </el-form-item>
@@ -116,10 +128,24 @@ export default {
         } else {
           //匹配不成功返回错误显示
           callback(
-            this.$message.error(
-              "邮箱格式:xx@xx.xx，只含数字、大小写字母、下划线、横杠"
-            )
+            // this.$message.error(
+            //   "邮箱格式:xx@xx.xx，只含数字、大小写字母、下划线、横杠"
+            // )
+            new Error("邮箱格式:xx@xx.xx，只含数字、大小写字母、下划线、横杠")
           );
+        }
+      }
+    };
+    // 自定义验证手机号
+    var checkPhone = (rule, value, callback) => {
+      const phoneReg = /^1[3|4|5|7|8][0-9]{9}$/;
+      if (!Number.isInteger(+value)) {
+        callback(new Error("请输入数字值"));
+      } else {
+        if (phoneReg.test(value)) {
+          callback();
+        } else {
+          callback(new Error("电话号码格式不正确"));
         }
       }
     };
@@ -131,6 +157,8 @@ export default {
         password: "",
         nickname: "",
         email: "",
+        phone: "",
+        powers: "普通职员",
         user_pic: null,
       },
       rules: {
@@ -159,7 +187,9 @@ export default {
           { max: 10, message: "昵称长度不能超过10位！", trigger: "blur" },
         ],
         email: [{ validator: checkEmail, trigger: "blur" }],
+        phone: [{ validator: checkPhone, trigger: "blur" }],
       },
+      // 用来展示选中的图片s
       src: "",
     };
   },
@@ -254,7 +284,7 @@ export default {
   width: 350px;
   text-align: center;
 }
-.img-box {
+.con-reg .img-box {
   margin-top: 35px;
   margin-left: 35px;
   max-width: 350px;

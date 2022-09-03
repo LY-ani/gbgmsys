@@ -2,12 +2,12 @@ import Cookie from 'js-cookie';
 export default {
   state: {
     isCollapse: false,
-    tabLists: [
+    tabsList: [
       {
         path: '/home',
         name: 'Home',
         label: '首页',
-        icon: 's-home',
+        icon: 'home',
         url: 'home/Home.vue',
       },
     ],
@@ -19,12 +19,32 @@ export default {
     collapseMenu(state) {
       state.isCollapse = !state.isCollapse;
     },
+    selectMenu(state, val) {
+      if (val.name !== 'Home') {
+        state.currentMenu = val;
+        const result = state.tabsList.findIndex(
+          (item) => item.name === val.name
+        );
+        if (result === -1) {
+          state.tabsList.push(val);
+        }
+      } else {
+        state.currentMenu = null;
+      }
+    },
+    removeMenu(state, val) {
+      const result = state.tabsList.findIndex((item) => item.name === val.name);
+      state.tabsList.splice(result, 1);
+    },
+    clearTabs(state) {
+      state.tabsList.splice(1, state.tabsList.length - 1);
+    },
     // 将从后端获取的菜单信息存储到cookie上
     setMenu(state, val) {
       state.menu = [];
       Cookie.set('gmenu', JSON.stringify(val));
     },
-    removeMenu(state) {
+    clearMenu(state) {
       state.menu = [];
       Cookie.remove('gmenu');
     },
@@ -49,12 +69,12 @@ export default {
           menuArray.push(item);
         }
       });
-      console.log(menuArray);
+      // console.log(menuArray);
       // 动态添加路由
       menuArray.forEach((item) => {
         router.addRoute('Main', item);
       });
-      console.log(router);
+      // console.log(router);
     },
   },
 };

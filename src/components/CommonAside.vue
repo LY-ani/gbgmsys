@@ -14,7 +14,7 @@
       v-for="item in noChildren"
       :key="item.path"
       :index="item.path.toString()"
-      @click="clickMenu(item.path)"
+      @click="clickMenu(item)"
     >
       <i :class="'el-icon-' + item.icon"></i>
       <span slot="title">{{ item.label }}</span>
@@ -33,7 +33,7 @@
           v-for="subItem in item.children"
           :key="subItem.path"
           :index="subItem.path.toString()"
-          @click="clickMenu(subItem.path)"
+          @click="clickMenu(subItem)"
         >
           <i :class="'el-icon-' + subItem.icon"></i>
           <span>{{ subItem.label }}</span>
@@ -64,12 +64,18 @@ export default {
       return this.$store.state.tab.menu;
     },
   },
+  watch: {
+    $route(to, from) {
+      this.dActive = to.path;
+    },
+  },
   mounted() {
-    // console.log(menu);
+    this.dActive = this.$route.path;
   },
   methods: {
-    clickMenu(path) {
-      this.$router.push(path);
+    clickMenu(item) {
+      this.$store.commit("selectMenu", item);
+      this.$router.push(item.path);
     },
     handleOpen(key, keyPath) {
       // console.log(key, keyPath);
